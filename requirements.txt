@@ -19,3 +19,8 @@ networkx>=3.0
 
 # その他ユーティリティ
 python-dateutil>=2.8.0
+
+# Streamlit UI (オプション)
+streamlit>=1.28.0
+plotly>=5.17.0
+pandas>=2.0.0

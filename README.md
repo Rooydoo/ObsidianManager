@@ -53,7 +53,26 @@ pip install -r requirements.txt
 
 ### 3. 論文の追加
 
-#### 方法1: 対話的入力
+#### 🎨 方法1: Streamlit UI（推奨・最も簡単）
+
+```bash
+# Linux/Mac
+./run_app.sh
+
+# Windows (ダブルクリック)
+run_app.bat
+
+# または PowerShell
+.\run_app.ps1
+```
+
+ブラウザが開き、直感的なUIで論文を追加できます：
+- PDFドラッグ&ドロップ
+- フォーム入力
+- タグ選択（ドロップダウン）
+- リアルタイムプレビュー
+
+#### 方法2: Pythonスクリプト（CLIモード）
 
 ```bash
 python scripts/add_paper.py --pdf path/to/paper.pdf
@@ -61,7 +80,7 @@ python scripts/add_paper.py --pdf path/to/paper.pdf
 
 対話形式でメタデータを入力します。
 
-#### 方法2: YAMLファイルから
+#### 方法3: YAMLファイルから
 
 ```bash
 # テンプレートをコピー
@@ -112,7 +131,61 @@ ObsidianManager/
 └── README.md                   # このファイル
 ```
 
-## 主要機能
+## 🎨 Streamlit UI（新機能！）
+
+### 起動方法
+
+**Windows**:
+```powershell
+# ダブルクリック
+run_app.bat
+
+# または
+.\run_app.ps1
+```
+
+**Mac/Linux**:
+```bash
+./run_app.sh
+```
+
+### 機能
+
+#### 📄 Add Paper
+- PDFアップロード（ドラッグ&ドロップ）
+- メタデータフォーム入力
+- タグ選択（ドロップダウン）
+- リアルタイムプレビュー
+- Obsidianへ自動連携
+
+#### 📚 Browse
+- 論文一覧表示
+- フィルタ・検索
+  - 研究タイプ
+  - Disease / Method / Analysis
+  - キーワード検索
+  - 年範囲フィルタ
+- 論文詳細表示
+- 「Obsidianで開く」ボタン
+
+#### 📊 Statistics
+- 研究タイプ分布（円グラフ・棒グラフ）
+- 年代別分布（ヒストグラム・累積グラフ）
+- Perspectives分析
+- タグ共起分析
+- キーワード頻度
+
+### Obsidian連携
+
+- 一覧の各論文に「📖 Obsidianで開く」ボタン
+- クリックで該当ノートを直接開く（`obsidian://` プロトコル）
+- StreamlitでデータPDF → Obsidianで深く閲覧・思考
+
+詳細: [app/README.md](app/README.md)
+
+---
+
+## 主要機能（CLIモード）
 
 ### 論文追加
 
