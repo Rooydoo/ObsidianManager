@@ -44,12 +44,21 @@ exports/*/
 ehthumbs.db
 Thumbs.db
 
-# Obsidian
+# Obsidian - ユーザー固有の設定のみ除外
+ObsidianVault/.obsidian/workspace*
+ObsidianVault/.obsidian/workspace.json
+ObsidianVault/.obsidian/workspace-mobile.json
+ObsidianVault/.obsidian/cache/
+ObsidianVault/.obsidian/graph.json
+ObsidianVault/.obsidian/plugins/*/data.json
+ObsidianVault/.obsidian/hotkeys.json
+ObsidianVault/.obsidian/app.json
+
+# Obsidianの一時ファイル
+ObsidianVault/.trash/
 .obsidian/workspace*
 .obsidian/cache
 .obsidian/graph.json
-.obsidian/plugins/*/
-!.obsidian/plugins/README.md
 
 # IDE
 .vscode/
