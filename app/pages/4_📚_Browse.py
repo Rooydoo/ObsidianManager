@@ -200,7 +200,18 @@ try:
     # ソート
     sort_by = st.selectbox(
         "並び替え",
-        options=["追加日（新しい順）", "追加日（古い順）", "年（新しい順）", "年（古い順）", "タイトル（A-Z）"],
+        options=[
+            "追加日（新しい順）",
+            "追加日（古い順）",
+            "年（新しい順）",
+            "年（古い順）",
+            "タイトル（A-Z）",
+            "研究タイプ（A-Z）",
+            "Disease（A-Z）",
+            "Method（A-Z）",
+            "サンプルサイズ（大きい順）",
+            "サンプルサイズ（小さい順）"
+        ],
         index=0
     )
 
@@ -240,6 +251,26 @@ try:
         table_data.sort(key=lambda x: x['_data'].get('year', 0) or 0)
     elif sort_by == "タイトル（A-Z）":
         table_data.sort(key=lambda x: x['タイトル'].lower())
+    elif sort_by == "研究タイプ（A-Z）":
+        table_data.sort(key=lambda x: x['_data'].get('study_type', '').lower())
+    elif sort_by == "Disease（A-Z）":
+        table_data.sort(key=lambda x: x['_data'].get('perspectives', {}).get('disease', '').lower())
+    elif sort_by == "Method（A-Z）":
+        table_data.sort(key=lambda x: x['_data'].get('perspectives', {}).get('method', '').lower())
+    elif sort_by == "サンプルサイズ（大きい順）":
+        def get_sample_size(x):
+            size = x['_data'].get('sample_size', 0)
+            if isinstance(size, (int, float)):
+                return size
+            return 0
+        table_data.sort(key=get_sample_size, reverse=True)
+    elif sort_by == "サンプルサイズ（小さい順）":
+        def get_sample_size(x):
+            size = x['_data'].get('sample_size', 0)
+            if isinstance(size, (int, float)):
+                return size
+            return float('inf')  # サイズ不明は最後に
+        table_data.sort(key=get_sample_size)
 
     # データフレーム表示（チェックボックス付き）
     display_data = []
