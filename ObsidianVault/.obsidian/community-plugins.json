@@ -1,0 +1,25 @@
+{
+  "pluginEnabledStatus": {
+    "file-explorer": true,
+    "global-search": true,
+    "switcher": true,
+    "graph": true,
+    "backlink": true,
+    "outgoing-link": true,
+    "tag-pane": true,
+    "page-preview": true,
+    "daily-notes": false,
+    "templates": false,
+    "note-composer": true,
+    "command-palette": true,
+    "markdown-importer": true,
+    "word-count": true,
+    "open-with-default-app": true,
+    "file-recovery": true,
+    "dataview": true,
+    "templater-obsidian": true,
+    "table-editor-obsidian": true,
+    "obsidian-git": true,
+    "tag-wrangler": true
+  }
+}

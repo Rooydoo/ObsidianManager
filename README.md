@@ -12,9 +12,21 @@ PDFを物理的に1箇所に集約保存し、メタデータとObsidianで多�
 
 ## クイックスタート
 
+> **Windows ユーザー**: [Windowsセットアップガイド](docs/WINDOWS_SETUP.md)も参照してください
+
 ### 1. 環境構築
 
+**Linux/Mac:**
 ```bash
+# 依存ライブラリのインストール
+pip install -r requirements.txt
+
+# Obsidianのインストール（公式サイトから）
+# https://obsidian.md/
+```
+
+**Windows (PowerShell):**
+```powershell
 # 依存ライブラリのインストール
 pip install -r requirements.txt
 
@@ -27,10 +39,17 @@ pip install -r requirements.txt
 1. Obsidianを起動
 2. "Open folder as vault"を選択
 3. `ObsidianVault`フォルダを選択
+   - **Windows**: `C:\Users\world\OneDrive\デスクトップ\ObsidianManager\ObsidianVault`
+   - **Mac/Linux**: `/path/to/ObsidianManager/ObsidianVault`
 4. Community Plugins を有効化
    - Settings → Community plugins → Turn on community plugins
-5. Dataviewプラグインをインストール
-   - Browse → 検索: "Dataview" → Install → Enable
+5. 推奨プラグインをインストール・有効化
+   - **Dataview** （必須）: 動的クエリ
+   - **Templater**: テンプレート機能
+   - **Advanced Tables**: テーブル編集
+   - **Obsidian Git**: 自動バックアップ
+   - **Tag Wrangler**: タグ管理
+   - CSS Snippets は自動適用されます
 
 ### 3. 論文の追加
 

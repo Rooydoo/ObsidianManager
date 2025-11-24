@@ -1,0 +1,118 @@
+/* 論文ノート用カードスタイル */
+
+/* Study Overview セクションのスタイル */
+.markdown-preview-view h2:contains("Study Overview") + hr + p,
+.markdown-preview-view h2:contains("📊 Study Overview") + hr + p {
+  background: var(--background-secondary);
+  border-left: 4px solid var(--interactive-accent);
+  padding: 1em;
+  border-radius: 4px;
+  margin: 1em 0;
+}
+
+/* Abstract の details 要素のスタイル */
+.markdown-preview-view details {
+  background: var(--background-secondary);
+  border-radius: 6px;
+  padding: 0.5em 1em;
+  margin: 1em 0;
+}
+
+.markdown-preview-view details summary {
+  cursor: pointer;
+  font-weight: 600;
+  padding: 0.5em 0;
+  color: var(--text-accent);
+}
+
+.markdown-preview-view details[open] summary {
+  border-bottom: 1px solid var(--background-modifier-border);
+  margin-bottom: 1em;
+}
+
+/* Key Findings セクションのハイライト */
+.markdown-preview-view h2:contains("Key Findings") ~ h3,
+.markdown-preview-view h2:contains("🔍 Key Findings") ~ h3 {
+  background: linear-gradient(120deg, var(--background-secondary) 0%, var(--background-secondary-alt) 100%);
+  padding: 0.5em 1em;
+  border-radius: 4px;
+  margin-top: 1em;
+}
+
+/* タグのスタイル強化 */
+.tag[href="#stroke"] {
+  background-color: #ff6b6b;
+  color: white;
+}
+
+.tag[href="#gait_analysis"],
+.tag[href="#motion_capture"] {
+  background-color: #4ecdc4;
+  color: white;
+}
+
+.tag[href="#machine_learning"],
+.tag[href="#deep_learning"] {
+  background-color: #95e1d3;
+  color: #333;
+}
+
+.tag[href="#rct"],
+.tag[href="#systematic_review"] {
+  background-color: #f38181;
+  color: white;
+}
+
+/* Perspectives セクションのリンクスタイル */
+.markdown-preview-view h3:contains("Perspectives") + ul {
+  background: var(--background-secondary);
+  padding: 1em;
+  border-radius: 6px;
+  list-style: none;
+}
+
+.markdown-preview-view h3:contains("Perspectives") + ul li {
+  padding: 0.3em 0;
+}
+
+.markdown-preview-view h3:contains("Perspectives") + ul li strong {
+  color: var(--text-accent);
+  min-width: 100px;
+  display: inline-block;
+}
+
+/* Resources セクションのボタンスタイル */
+.markdown-preview-view h3:contains("PDF") ~ p a {
+  background: var(--interactive-accent);
+  color: white;
+  padding: 0.5em 1em;
+  border-radius: 4px;
+  text-decoration: none;
+  display: inline-block;
+  margin: 0.5em 0;
+}
+
+.markdown-preview-view h3:contains("PDF") ~ p a:hover {
+  opacity: 0.8;
+}
+
+/* チェックボックスのスタイル強化 */
+.markdown-preview-view input[type="checkbox"]:checked {
+  background-color: var(--interactive-accent);
+}
+
+/* Priority タグ */
+.frontmatter-container .tag[data-tag-name="priority-high"] {
+  background-color: #ff6b6b;
+  color: white;
+}
+
+.frontmatter-container .tag[data-tag-name="priority-medium"] {
+  background-color: #ffd93d;
+  color: #333;
+}
+
+.frontmatter-container .tag[data-tag-name="priority-low"] {
+  background-color: #6bcf7f;
+  color: white;
+}
