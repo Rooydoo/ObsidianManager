@@ -7,6 +7,9 @@ import sys
 from pathlib import Path
 import json
 import pandas as pd
+import zipfile
+import io
+from datetime import datetime
 
 # プロジェクトルートをパスに追加
 project_root = Path(__file__).parent.parent.parent
@@ -22,6 +25,80 @@ def load_catalog():
     catalog_path = project_root / "data" / "catalog.json"
     with open(catalog_path, 'r', encoding='utf-8') as f:
         return json.load(f)
+
+def create_papers_zip(selected_ids, papers, project_root):
+    """
+    選択された論文のPDFとメタデータをZIPファイルにまとめる
+
+    Args:
+        selected_ids: 選択された論文IDのリスト
+        papers: 全論文データ
+        project_root: プロジェクトルート
+
+    Returns:
+        BytesIO: ZIPファイルのバイナリデータ
+    """
+    zip_buffer = io.BytesIO()
+
+    with zipfile.ZipFile(zip_buffer, 'w', zipfile.ZIP_DEFLATED) as zip_file:
+        # 選択された論文のカタログデータ
+        export_catalog = {
+            'papers': {},
+            'metadata': {
+                'export_date': datetime.now().isoformat(),
+                'total_papers': len(selected_ids),
+                'exported_by': 'ObsidianManager'
+            }
+        }
+
+        for paper_id in selected_ids:
+            if paper_id not in papers:
+                continue
+
+            paper_data = papers[paper_id]
+            export_catalog['papers'][paper_id] = paper_data
+
+            # PDFファイルを追加
+            pdf_path = paper_data.get('pdf_path')
+            if pdf_path and Path(pdf_path).exists():
+                pdf_file_path = Path(pdf_path)
+                zip_file.write(
+                    pdf_file_path,
+                    arcname=f"papers/{pdf_file_path.name}"
+                )
+
+            # メタデータJSONを追加
+            metadata_json = json.dumps(paper_data, ensure_ascii=False, indent=2)
+            zip_file.writestr(
+                f"metadata/{paper_id}.json",
+                metadata_json
+            )
+
+        # カタログファイルを追加
+        catalog_json = json.dumps(export_catalog, ensure_ascii=False, indent=2)
+        zip_file.writestr("catalog_export.json", catalog_json)
+
+        # READMEを追加
+        readme_content = f"""# 論文エクスポート
+
+エクスポート日時: {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}
+論文数: {len(selected_ids)}件
+
+## フォルダ構成
+
+- papers/ : PDFファイル
+- metadata/ : 各論文のメタデータ（JSON形式）
+- catalog_export.json : 選択した論文のカタログ情報
+
+## ObsidianManagerについて
+
+このファイルはObsidianManagerからエクスポートされました。
+リポジトリ: https://github.com/Rooydoo/ObsidianManager
+"""
+        zip_file.writestr("README.md", readme_content)
+
+    zip_buffer.seek(0)
+    return zip_buffer
 
 # タイトル
 st.title("📚 論文一覧・検索")
@@ -123,7 +200,18 @@ try:
     # ソート
     sort_by = st.selectbox(
         "並び替え",
-        options=["追加日（新しい順）", "追加日（古い順）", "年（新しい順）", "年（古い順）", "タイトル（A-Z）"],
+        options=[
+            "追加日（新しい順）",
+            "追加日（古い順）",
+            "年（新しい順）",
+            "年（古い順）",
+            "タイトル（A-Z）",
+            "研究タイプ（A-Z）",
+            "Disease（A-Z）",
+            "Method（A-Z）",
+            "サンプルサイズ（大きい順）",
+            "サンプルサイズ（小さい順）"
+        ],
         index=0
     )
 
@@ -163,17 +251,87 @@ try:
         table_data.sort(key=lambda x: x['_data'].get('year', 0) or 0)
     elif sort_by == "タイトル（A-Z）":
         table_data.sort(key=lambda x: x['タイトル'].lower())
+    elif sort_by == "研究タイプ（A-Z）":
+        table_data.sort(key=lambda x: x['_data'].get('study_type', '').lower())
+    elif sort_by == "Disease（A-Z）":
+        table_data.sort(key=lambda x: x['_data'].get('perspectives', {}).get('disease', '').lower())
+    elif sort_by == "Method（A-Z）":
+        table_data.sort(key=lambda x: x['_data'].get('perspectives', {}).get('method', '').lower())
+    elif sort_by == "サンプルサイズ（大きい順）":
+        def get_sample_size(x):
+            size = x['_data'].get('sample_size', 0)
+            if isinstance(size, (int, float)):
+                return size
+            return 0
+        table_data.sort(key=get_sample_size, reverse=True)
+    elif sort_by == "サンプルサイズ（小さい順）":
+        def get_sample_size(x):
+            size = x['_data'].get('sample_size', 0)
+            if isinstance(size, (int, float)):
+                return size
+            return float('inf')  # サイズ不明は最後に
+        table_data.sort(key=get_sample_size)
 
-    # データフレーム表示（Obsidianリンク列を除く）
-    display_data = [{k: v for k, v in row.items() if k not in ['Obsidianリンク', '_data']} for row in table_data]
+    # データフレーム表示（チェックボックス付き）
+    display_data = []
+    for row in table_data:
+        row_data = {k: v for k, v in row.items() if k not in ['Obsidianリンク', '_data']}
+        row_data['選択'] = False  # チェックボックス列を先頭に
+        display_data.append(row_data)
+
     df = pd.DataFrame(display_data)
 
-    st.dataframe(
+    # 列の順序を変更（選択を先頭に）
+    cols = ['選択'] + [col for col in df.columns if col != '選択']
+    df = df[cols]
+
+    # 編集可能なデータフレームとして表示
+    edited_df = st.data_editor(
         df,
         use_container_width=True,
         hide_index=True,
-        height=400
+        height=400,
+        column_config={
+            "選択": st.column_config.CheckboxColumn(
+                "選択",
+                help="ダウンロードする論文を選択",
+                default=False,
+            )
+        },
+        disabled=[col for col in df.columns if col != '選択']  # 選択列以外は編集不可
     )
+
+    # 選択された論文のIDリスト
+    selected_paper_ids = [
+        table_data[i]['ID']
+        for i in range(len(edited_df))
+        if edited_df.iloc[i]['選択']
+    ]
+
+    # ダウンロードボタン
+    if selected_paper_ids:
+        st.success(f"✅ {len(selected_paper_ids)} 件の論文が選択されています")
+
+        col_download1, col_download2, col_download3 = st.columns([1, 1, 2])
+
+        with col_download1:
+            # ZIPダウンロードボタン
+            zip_buffer = create_papers_zip(selected_paper_ids, papers, project_root)
+            timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
+
+            st.download_button(
+                label=f"📦 選択した論文をダウンロード ({len(selected_paper_ids)}件)",
+                data=zip_buffer,
+                file_name=f"papers_export_{timestamp}.zip",
+                mime="application/zip"
+            )
+
+        with col_download2:
+            # 選択をクリア
+            if st.button("🔄 選択をクリア"):
+                st.rerun()
+    else:
+        st.info("💡 ダウンロードしたい論文にチェックを入れてください")
 
     st.markdown("---")
 
@@ -257,7 +415,7 @@ try:
         # Obsidianで開くボタン
         st.markdown("---")
 
-        col_btn1, col_btn2, col_btn3 = st.columns(3)
+        col_btn1, col_btn2, col_btn3, col_btn4 = st.columns(4)
 
         with col_btn1:
             st.markdown(f"""
@@ -294,6 +452,22 @@ try:
                 """, unsafe_allow_html=True)
 
         with col_btn3:
+            # 個別ダウンロードボタン
+            pdf_path = paper_data.get('pdf_path')
+            if pdf_path and Path(pdf_path).exists():
+                with open(pdf_path, 'rb') as f:
+                    pdf_data = f.read()
+                    pdf_filename = Path(pdf_path).name
+
+                st.download_button(
+                    label="💾 PDFをダウンロード",
+                    data=pdf_data,
+                    file_name=pdf_filename,
+                    mime="application/pdf",
+                    use_container_width=True
+                )
+
+        with col_btn4:
             # MOCへのリンク
             disease_tag = perspectives.get('disease')
             if disease_tag and disease_tag != 'not_applicable':
