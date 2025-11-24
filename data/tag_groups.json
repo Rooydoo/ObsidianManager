@@ -1,0 +1,74 @@
+{
+  "clinical_trials": {
+    "meta_tag": "study_type",
+    "display_name": "臨床試験",
+    "tags": ["rct", "clinical_trial"],
+    "description": "介入研究"
+  },
+  "review_articles": {
+    "meta_tag": "study_type",
+    "display_name": "レビュー論文",
+    "tags": ["systematic_review", "meta_analysis", "literature_review", "scoping_review", "narrative_review"],
+    "description": "既存研究のまとめ"
+  },
+  "observational_studies": {
+    "meta_tag": "study_type",
+    "display_name": "観察研究",
+    "tags": ["cohort_study", "case_control", "cross_sectional", "observational_study"],
+    "description": "観察による研究デザイン"
+  },
+  "case_studies": {
+    "meta_tag": "study_type",
+    "display_name": "症例研究",
+    "tags": ["case_series", "case_report"],
+    "description": "症例報告・シリーズ"
+  },
+  "neurological_disorders": {
+    "meta_tag": "disease",
+    "display_name": "神経疾患",
+    "tags": ["stroke", "parkinson", "multiple_sclerosis", "traumatic_brain_injury", "dementia"],
+    "description": "中枢神経系の疾患"
+  },
+  "musculoskeletal_disorders": {
+    "meta_tag": "disease",
+    "display_name": "筋骨格系疾患",
+    "tags": ["fracture", "osteoarthritis", "spinal_cord_injury"],
+    "description": "骨・関節・筋肉の疾患"
+  },
+  "kinematic_methods": {
+    "meta_tag": "method",
+    "display_name": "運動学的手法",
+    "tags": ["motion_capture", "gait_analysis", "accelerometer", "imu"],
+    "description": "身体運動の計測手法"
+  },
+  "kinetic_methods": {
+    "meta_tag": "method",
+    "display_name": "動力学的手法",
+    "tags": ["force_plate", "emg"],
+    "description": "力・筋活動の計測手法"
+  },
+  "imaging_methods": {
+    "meta_tag": "method",
+    "display_name": "画像診断",
+    "tags": ["mri", "ct", "ultrasound"],
+    "description": "医療画像による評価"
+  },
+  "ai_analysis": {
+    "meta_tag": "analysis",
+    "display_name": "AI・機械学習",
+    "tags": ["machine_learning", "deep_learning"],
+    "description": "人工知能による解析"
+  },
+  "statistical_methods": {
+    "meta_tag": "analysis",
+    "display_name": "統計解析",
+    "tags": ["statistical_analysis", "regression_analysis", "anova", "correlation_analysis"],
+    "description": "伝統的統計手法"
+  },
+  "signal_processing": {
+    "meta_tag": "analysis",
+    "display_name": "信号処理",
+    "tags": ["time_series", "frequency_analysis", "wavelet", "principal_component_analysis"],
+    "description": "信号・データ処理手法"
+  }
+}

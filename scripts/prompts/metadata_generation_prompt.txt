@@ -1,0 +1,152 @@
+# 論文メタデータ生成プロンプト
+
+以下の論文情報から、Obsidian用の構造化メタデータを生成してください。
+
+---
+
+## 入力情報
+
+**論文タイトル**: [ここにタイトルをペースト]
+
+**著者**: [著者名をペースト]
+
+**掲載情報**: [ジャーナル名、年、巻号ページをペースト]
+
+**DOI/PMID**: [あれば記載]
+
+**アブストラクト**:
+```
+[アブストラクト全文をペースト]
+```
+
+---
+
+## 出力指示
+
+以下の形式で出力してください：
+
+### 1. YAML Frontmatter
+```yaml
+---
+# ========== 基本情報 ==========
+paper_id: [paper + 3桁連番を提案]
+title: [論文タイトル]
+authors:
+  - [著者1]
+  - [著者2]
+year: [年]
+journal: [ジャーナル名]
+volume: [巻]
+issue: [号]
+pages: [ページ]
+doi: [DOI]
+pmid: [PMID]
+
+# ========== 研究デザイン（必須）==========
+study_type: [canonical tag形式で]
+study_design: [具体的な研究デザイン]
+sample_size: [サンプル数]
+study_population: [対象集団の説明]
+
+# ========== 分類（Perspectives）==========
+perspectives:
+  study_type: [study_typeと同じ]
+  disease: [該当する疾患タグ]
+  method: [該当する方法論タグ]
+  analysis: [該当する解析手法タグ]
+  population: [該当する集団タグ]
+
+# ========== キーワード ==========
+keywords:
+  - [キーワード1]
+  - [キーワード2]
+  - [キーワード3]
+
+# ========== メタデータ ==========
+language: [en/ja]
+date_added: [今日の日付]
+date_modified: [今日の日付]
+read_status: unread
+priority: medium
+tags:
+  - #[タグ1]
+  - #[タグ2]
+---
+```
+
+### 2. 要約（日本語）
+
+**目的**:
+[研究の目的を1-2文で]
+
+**方法**:
+- 対象: [対象者の詳細]
+- 測定: [測定方法・機器]
+- 解析: [統計手法・解析方法]
+
+**結果**:
+[主要な結果を箇条書きで3-5点]
+
+**結論**:
+[結論を1-2文で]
+
+### 3. Key Findings（主要な知見）
+
+1. **[知見1のタイトル]**
+   - [詳細]
+
+2. **[知見2のタイトル]**
+   - [詳細]
+
+3. **臨床的意義**
+   - [臨床応用可能性]
+
+### 4. 限界・課題
+
+- [限界点1]
+- [限界点2]
+- [今後の課題]
+
+---
+
+## タグ選択ガイドライン
+
+### study_type（必須・以下から選択）
+- `rct`: ランダム化比較試験
+- `systematic_review`: システマティックレビュー
+- `meta_analysis`: メタアナリシス
+- `cohort_study`: コホート研究
+- `case_control`: 症例対照研究
+- `cross_sectional`: 横断研究
+- `case_series`: 症例シリーズ
+- `case_report`: 症例報告
+- `observational_study`: 観察研究（一般）
+- `literature_review`: 文献レビュー
+- `clinical_trial`: 臨床試験（RCT以外）
+- `pilot_study`: パイロット研究
+- `feasibility_study`: 実行可能性研究
+
+### disease（疾患・病態）
+例: `stroke`, `parkinson`, `fracture`, `osteoarthritis`, `cerebral_palsy`, `spinal_cord_injury`, `multiple_sclerosis`, `dementia`
+
+該当なしの場合は`healthy`または`not_applicable`
+
+### method（測定・評価方法）
+例: `gait_analysis`, `motion_capture`, `emg`, `force_plate`, `accelerometer`, `imu`, `clinical_assessment`, `questionnaire`, `mri`, `ct`
+
+### analysis（解析手法）
+例: `machine_learning`, `deep_learning`, `time_series`, `statistical_analysis`, `biomechanical_modeling`, `frequency_analysis`, `wavelet`, `principal_component_analysis`
+
+### population（対象集団）
+例: `elderly`, `pediatric`, `young_adults`, `middle_aged`, `athletes`, `community_dwelling`, `hospitalized`, `outpatient`
+
+---
+
+## 注意事項
+
+1. **タグは小文字・アンダースコア区切り**で統一（例: `gait_analysis`）
+2. **複数該当する場合は最も主要なもの**を選択
+3. **study_typeは必須**、他は該当するものがなければ`not_applicable`
+4. **sample_sizeは数値のみ**（単位不要）
+5. **要約は簡潔に**、詳細はKey Findingsに記載
+6. **不明な情報は空白**のまま（推測しない）

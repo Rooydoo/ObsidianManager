@@ -1,0 +1,129 @@
+{
+  "study_type": {
+    "canonical_tags": [
+      "rct",
+      "systematic_review",
+      "meta_analysis",
+      "cohort_study",
+      "case_control",
+      "cross_sectional",
+      "case_series",
+      "case_report",
+      "observational_study",
+      "literature_review",
+      "scoping_review",
+      "narrative_review",
+      "clinical_trial",
+      "pilot_study",
+      "feasibility_study"
+    ],
+    "aliases": {
+      "rct": ["randomized_controlled_trial", "randomised_controlled_trial", "RCT"],
+      "systematic_review": ["systematic_literature_review"],
+      "meta_analysis": ["metaanalysis", "meta analysis"],
+      "cohort_study": ["prospective_cohort", "retrospective_cohort"],
+      "case_control": ["case_control_study"],
+      "cross_sectional": ["cross_sectional_study", "prevalence_study"],
+      "literature_review": ["review", "review_article"],
+      "clinical_trial": ["controlled_trial"],
+      "observational_study": ["observational"]
+    }
+  },
+  "disease": {
+    "canonical_tags": [
+      "stroke",
+      "parkinson",
+      "fracture",
+      "osteoarthritis",
+      "cerebral_palsy",
+      "spinal_cord_injury",
+      "multiple_sclerosis",
+      "dementia",
+      "traumatic_brain_injury",
+      "healthy",
+      "not_applicable"
+    ],
+    "aliases": {
+      "stroke": ["CVA", "cerebrovascular_accident", "brain_attack"],
+      "fracture": ["bone_fracture", "broken_bone"],
+      "parkinson": ["parkinsons_disease", "PD"],
+      "osteoarthritis": ["OA", "degenerative_joint_disease"],
+      "cerebral_palsy": ["CP"],
+      "spinal_cord_injury": ["SCI"],
+      "multiple_sclerosis": ["MS"],
+      "traumatic_brain_injury": ["TBI"]
+    }
+  },
+  "method": {
+    "canonical_tags": [
+      "gait_analysis",
+      "motion_capture",
+      "emg",
+      "force_plate",
+      "accelerometer",
+      "imu",
+      "clinical_assessment",
+      "questionnaire",
+      "mri",
+      "ct",
+      "ultrasound",
+      "balance_test",
+      "strength_test",
+      "range_of_motion",
+      "not_applicable"
+    ],
+    "aliases": {
+      "gait_analysis": ["gait_study", "walking_analysis", "locomotion_analysis"],
+      "motion_capture": ["mocap", "3d_motion_analysis"],
+      "emg": ["electromyography", "EMG"],
+      "force_plate": ["force_platform", "ground_reaction_force"],
+      "imu": ["inertial_measurement_unit", "wearable_sensor"],
+      "mri": ["magnetic_resonance_imaging", "MRI"],
+      "ct": ["computed_tomography", "CT"]
+    }
+  },
+  "analysis": {
+    "canonical_tags": [
+      "machine_learning",
+      "deep_learning",
+      "time_series",
+      "statistical_analysis",
+      "biomechanical_modeling",
+      "frequency_analysis",
+      "wavelet",
+      "principal_component_analysis",
+      "regression_analysis",
+      "anova",
+      "correlation_analysis",
+      "not_applicable"
+    ],
+    "aliases": {
+      "machine_learning": ["ML"],
+      "deep_learning": ["DL", "neural_network"],
+      "principal_component_analysis": ["PCA"],
+      "regression_analysis": ["linear_regression", "logistic_regression"],
+      "anova": ["analysis_of_variance"],
+      "time_series": ["time_series_analysis"]
+    }
+  },
+  "population": {
+    "canonical_tags": [
+      "elderly",
+      "pediatric",
+      "young_adults",
+      "middle_aged",
+      "athletes",
+      "community_dwelling",
+      "hospitalized",
+      "outpatient",
+      "healthy_controls",
+      "not_applicable"
+    ],
+    "aliases": {
+      "elderly": ["older_adults", "geriatric", "senior"],
+      "pediatric": ["children", "pediatrics"],
+      "young_adults": ["young_adult"],
+      "athletes": ["athletic", "sports"]
+    }
+  }
+}

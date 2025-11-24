@@ -1,0 +1,21 @@
+# 医学論文管理システム 必須ライブラリ
+
+# PDF処理
+PyPDF2>=3.0.0
+pdfplumber>=0.10.0
+
+# YAML処理
+PyYAML>=6.0
+
+# CLI強化
+click>=8.1.0
+rich>=13.0.0
+
+# ネットワーク解析（Phase 2用）
+networkx>=3.0
+
+# Claude API（Phase 2用・オプション）
+# anthropic>=0.18.0
+
+# その他ユーティリティ
+python-dateutil>=2.8.0

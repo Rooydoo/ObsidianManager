@@ -1,0 +1,84 @@
+# 論文メタデータ入力テンプレート
+# このファイルを編集して論文情報を入力してください
+
+# ========== 基本情報 ==========
+title: ""
+authors: []
+year:
+journal: ""
+volume: ""
+issue: ""
+pages: ""
+doi: ""
+pmid: ""
+
+# ========== 研究デザイン（必須）==========
+# 以下から選択: rct, systematic_review, meta_analysis, cohort_study, case_control,
+#               cross_sectional, case_series, case_report, observational_study,
+#               literature_review, scoping_review, clinical_trial, pilot_study, feasibility_study
+study_type: ""
+
+# 研究デザインの詳細説明
+study_design: ""
+
+# サンプルサイズ（数値のみ）
+sample_size:
+
+# 対象集団の説明
+study_population: ""
+
+# ========== 分類（Perspectives）==========
+perspectives:
+  # study_typeと同じ
+  study_type: ""
+
+  # 疾患タグ（例: stroke, parkinson, fracture, healthy, not_applicable）
+  disease: ""
+
+  # 方法論タグ（例: gait_analysis, motion_capture, emg, force_plate, not_applicable）
+  method: ""
+
+  # 解析手法タグ（例: machine_learning, statistical_analysis, time_series, not_applicable）
+  analysis: ""
+
+  # 対象集団タグ（例: elderly, pediatric, young_adults, athletes, not_applicable）
+  population: ""
+
+# ========== 内容 ==========
+# アブストラクト（原文）
+abstract: |
+
+
+# 要約（日本語）
+# 目的、方法、結果、結論を簡潔に
+summary: |
+  目的:
+
+  方法:
+
+  結果:
+
+  結論:
+
+
+# 主要な知見（箇条書き）
+key_findings: []
+
+# 限界・課題（箇条書き）
+limitations: []
+
+# ========== メタ情報 ==========
+# キーワード（タグとして使用される）
+keywords: []
+
+# 言語: en, ja など
+language: "en"
+
+# 読了状態: unread, reading, read
+read_status: "unread"
+
+# 優先度: low, medium, high
+priority: "medium"
+
+# 個人的なメモ
+notes: ""

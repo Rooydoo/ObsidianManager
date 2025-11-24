@@ -1,0 +1,79 @@
+# 医学論文管理システム 設定ファイル
+
+# パス設定（絶対パス推奨）
+paths:
+  # PDFファイル保存先
+  papers_dir: ./papers/all_papers
+  # Obsidian Vault
+  obsidian_vault: ./ObsidianVault
+  # データファイル
+  catalog: ./data/catalog.json
+  tag_hierarchy: ./data/tag_hierarchy.json
+  tag_groups: ./data/tag_groups.json
+  # エクスポート先のベースディレクトリ
+  export_base: ./exports
+
+# Git設定
+git:
+  # Git機能を使用するか
+  enabled: true
+  # 自動コミット
+  auto_commit: true
+  # 自動プッシュ（falseを推奨）
+  auto_push: false
+  # リモート名
+  remote: origin
+  # ブランチ名
+  branch: claude/medical-paper-management-01VxgnfhbGD3jYZE25TY81Ff
+
+# 処理モード
+processing:
+  # デフォルトモード: manual（手動） / auto（自動・Phase 2）
+  default_mode: manual
+  # PDF処理設定
+  pdf:
+    # PDFからテキスト抽出する方法: pdfplumber / pypdf2
+    extractor: pdfplumber
+    # 抽出するページ数（0=全ページ）
+    max_pages: 0
+
+# Claude API設定（Phase 2用）
+ai:
+  # AI機能を使用するか
+  enabled: false
+  # APIプロバイダー: claude / openai
+  provider: claude
+  # モデル名
+  model: claude-sonnet-4-20250514
+  # API keyファイル（.envファイル）
+  api_key_file: ./config/api_keys.env
+
+# エクスポート設定
+export:
+  # PDF全文テキストを抽出するか
+  extract_full_text: true
+  # RAG用インデックスを生成するか
+  create_rag_index: true
+  # メタデータJSONを生成するか
+  create_metadata: true
+  # README.mdを生成するか
+  create_readme: true
+
+# Obsidianノート設定
+obsidian:
+  # ノートテンプレート
+  templates:
+    paper_note: ./templates/paper_note.md
+    moc_template: ./templates/moc_template.md
+    group_template: ./templates/group_template.md
+  # MOC自動更新
+  auto_update_moc: true
+  # Dataviewクエリを含めるか
+  include_dataview: true
+
+# ログ設定
+logging:
+  # ログレベル: DEBUG / INFO / WARNING / ERROR
+  level: INFO
+  # ログファイル
+  file: ./logs/system.log
