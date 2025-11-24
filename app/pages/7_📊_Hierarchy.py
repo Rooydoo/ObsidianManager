@@ -9,6 +9,10 @@ from pathlib import Path
 import json
 import plotly.graph_objects as go
 from collections import defaultdict, Counter
+import pandas as pd
+import zipfile
+import io
+from datetime import datetime
 
 # プロジェクトルートをパスに追加
 project_root = Path(__file__).parent.parent.parent
@@ -24,6 +28,79 @@ def load_catalog():
     catalog_path = project_root / "data" / "catalog.json"
     with open(catalog_path, 'r', encoding='utf-8') as f:
         return json.load(f)
+
+def create_papers_zip(selected_ids, papers, project_root):
+    """
+    選択された論文のPDFとメタデータをZIPファイルにまとめる
+
+    Args:
+        selected_ids: 選択された論文IDのリスト
+        papers: 全論文データ
+        project_root: プロジェクトルート
+
+    Returns:
+        BytesIO: ZIPファイルのバイナリデータ
+    """
+    zip_buffer = io.BytesIO()
+
+    with zipfile.ZipFile(zip_buffer, 'w', zipfile.ZIP_DEFLATED) as zip_file:
+        export_catalog = {
+            'papers': {},
+            'metadata': {
+                'export_date': datetime.now().isoformat(),
+                'total_papers': len(selected_ids),
+                'exported_by': 'ObsidianManager'
+            }
+        }
+
+        for paper_id in selected_ids:
+            if paper_id not in papers:
+                continue
+
+            paper_data = papers[paper_id]
+            export_catalog['papers'][paper_id] = paper_data
+
+            # PDFファイルを追加
+            pdf_path = paper_data.get('pdf_path')
+            if pdf_path and Path(pdf_path).exists():
+                pdf_file_path = Path(pdf_path)
+                zip_file.write(
+                    pdf_file_path,
+                    arcname=f"papers/{pdf_file_path.name}"
+                )
+
+            # メタデータJSONを追加
+            metadata_json = json.dumps(paper_data, ensure_ascii=False, indent=2)
+            zip_file.writestr(
+                f"metadata/{paper_id}.json",
+                metadata_json
+            )
+
+        # カタログファイルを追加
+        catalog_json = json.dumps(export_catalog, ensure_ascii=False, indent=2)
+        zip_file.writestr("catalog_export.json", catalog_json)
+
+        # READMEを追加
+        readme_content = f"""# 論文エクスポート
+
+エクスポート日時: {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}
+論文数: {len(selected_ids)}件
+
+## フォルダ構成
+
+- papers/ : PDFファイル
+- metadata/ : 各論文のメタデータ（JSON形式）
+- catalog_export.json : 選択した論文のカタログ情報
+
+## ObsidianManagerについて
+
+このファイルはObsidianManagerからエクスポートされました。
+リポジトリ: https://github.com/Rooydoo/ObsidianManager
+"""
+        zip_file.writestr("README.md", readme_content)
+
+    zip_buffer.seek(0)
+    return zip_buffer
 
 def get_tag_value(paper_data, meta_tag):
     """
@@ -360,6 +437,132 @@ try:
                     st.write(f"- **{value}**: {count} 件")
 
                 st.markdown("---")
+
+        # 論文リスト表示
+        st.markdown("---")
+        st.subheader("📄 論文リスト")
+        st.markdown("階層パスを指定して、該当する論文を表示・ダウンロードできます。")
+
+        # 階層パスフィルタ
+        st.markdown("### フィルタ条件")
+
+        filter_cols = st.columns(num_levels)
+        selected_filters = {}
+
+        for i, level_name in enumerate(hierarchy_levels):
+            with filter_cols[i]:
+                # この階層の全ての値を取得
+                values_at_level = set()
+                for paper_id, paper_data in papers.items():
+                    value = get_tag_value(paper_data, level_name)
+                    values_at_level.add(value)
+
+                # ドロップダウンで選択（Allオプション付き）
+                options = ["All"] + sorted(list(values_at_level))
+                selected = st.selectbox(
+                    available_tags[level_name],
+                    options=options,
+                    key=f"filter_{level_name}"
+                )
+
+                if selected != "All":
+                    selected_filters[level_name] = selected
+
+        # フィルタリングされた論文を取得
+        filtered_papers_list = []
+        for paper_id, paper_data in papers.items():
+            match = True
+            for level_name, filter_value in selected_filters.items():
+                paper_value = get_tag_value(paper_data, level_name)
+                if paper_value != filter_value:
+                    match = False
+                    break
+
+            if match:
+                filtered_papers_list.append({
+                    'id': paper_id,
+                    'data': paper_data
+                })
+
+        st.markdown(f"**フィルタ結果**: {len(filtered_papers_list)} 件の論文")
+
+        if filtered_papers_list:
+            # テーブル表示
+            table_data = []
+            for item in filtered_papers_list:
+                paper_id = item['id']
+                paper_data = item['data']
+
+                authors_str = ', '.join(paper_data.get('authors', [])[:2])
+                if len(paper_data.get('authors', [])) > 2:
+                    authors_str += ' et al.'
+
+                table_data.append({
+                    'ID': paper_id,
+                    'タイトル': paper_data.get('title', 'N/A')[:60] + ('...' if len(paper_data.get('title', '')) > 60 else ''),
+                    '著者': authors_str,
+                    '年': paper_data.get('year', 'N/A'),
+                    '研究タイプ': paper_data.get('study_type', 'N/A'),
+                    '選択': False
+                })
+
+            df = pd.DataFrame(table_data)
+
+            # 列の順序を変更（選択を先頭に）
+            cols = ['選択'] + [col for col in df.columns if col != '選択']
+            df = df[cols]
+
+            # 編集可能なデータフレームとして表示
+            edited_df = st.data_editor(
+                df,
+                use_container_width=True,
+                hide_index=True,
+                height=300,
+                column_config={
+                    "選択": st.column_config.CheckboxColumn(
+                        "選択",
+                        help="ダウンロードする論文を選択",
+                        default=False,
+                    )
+                },
+                disabled=[col for col in df.columns if col != '選択']
+            )
+
+            # 選択された論文のIDリスト
+            selected_paper_ids = [
+                filtered_papers_list[i]['id']
+                for i in range(len(edited_df))
+                if edited_df.iloc[i]['選択']
+            ]
+
+            # ダウンロードボタン
+            if selected_paper_ids:
+                st.success(f"✅ {len(selected_paper_ids)} 件の論文が選択されています")
+
+                col_download1, col_download2 = st.columns(2)
+
+                with col_download1:
+                    # ZIPダウンロードボタン
+                    zip_buffer = create_papers_zip(selected_paper_ids, papers, project_root)
+                    timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
+
+                    st.download_button(
+                        label=f"📦 選択した論文をダウンロード ({len(selected_paper_ids)}件)",
+                        data=zip_buffer,
+                        file_name=f"papers_hierarchy_export_{timestamp}.zip",
+                        mime="application/zip",
+                        use_container_width=True
+                    )
+
+                with col_download2:
+                    # 選択をクリア
+                    if st.button("🔄 選択をクリア", use_container_width=True):
+                        st.rerun()
+            else:
+                st.info("💡 ダウンロードしたい論文にチェックを入れてください")
+
+        else:
+            st.warning("🔍 条件に一致する論文が見つかりませんでした。フィルタ条件を変更してください。")
 
     else:
         st.warning("⚠️ すべての階層にメタタグを選択してください")
