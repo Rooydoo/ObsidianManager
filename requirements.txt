@@ -14,8 +14,8 @@ rich>=13.0.0
 # ネットワーク解析（Phase 2用）
 networkx>=3.0
 
-# Claude API（Phase 2用・オプション）
-# anthropic>=0.18.0
+# Claude API（Phase 2 - Q&A自動生成）
+anthropic>=0.34.0
 
 # その他ユーティリティ
 python-dateutil>=2.8.0
