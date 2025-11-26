@@ -35,6 +35,9 @@ papers/all_papers/*.pdf
 # Exports（一時ファイル）
 exports/*/
 
+# Vector DB（ChromaDB）
+data/chroma_db/
+
 # OS
 .DS_Store
 .DS_Store?
